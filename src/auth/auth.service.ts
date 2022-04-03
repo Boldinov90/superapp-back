@@ -9,6 +9,7 @@ import { compare, genSalt, hash } from 'bcrypt'
 import { InjectModel } from 'nestjs-typegoose'
 import { UserModel } from 'src/user/user.model'
 import { AuthDto } from './auth.dto'
+// import { LoginAuthDto } from './login.auth.dto'
 
 @Injectable()
 export class AuthService {
@@ -25,17 +26,27 @@ export class AuthService {
          user: this.returnUserFields(user),
          ...tokens,
       }
+      // const user = {}
+      // const login = await this.UserModel.findOne({email: dto.email})
+      // if(!login) {
+      //    login.data.message = "sdfsdfsdfsdf"
+      //    return login
+      // }
+
+
+
+
+
+
+
+
    }
 
    async register(dto: AuthDto) {
       const oldUser = await this.UserModel.findOne({
-         name: dto.name,
          email: dto.email
       })
-      if (oldUser)
-         throw new BadRequestException(
-            'Пользователь с таким адресом уже существует',
-         )
+      if (oldUser) throw new BadRequestException('Пользователь с таким адресом уже существует')
       const salt = await genSalt(10)
       const newUser = new this.UserModel({
          name: dto.name,
@@ -52,11 +63,9 @@ export class AuthService {
 
    async validateUser(dto: AuthDto) {
       const user = await this.UserModel.findOne({
-         name: dto.name,
-         email: dto.email
+         email: dto.email,
       })
-      if (!user) throw new UnauthorizedException('Пользователь не найден')
-
+      if (!user) throw new UnauthorizedException('Пользователь не найден. Зарегистрируйтесь*') 
       const isValidPassword = await compare(dto.password, user.password)
       if (!isValidPassword) throw new UnauthorizedException('Пароль неверный')
       return user
@@ -74,7 +83,7 @@ export class AuthService {
       return {
          _id: user._id,
          name: user.name,
-         email: user.email,
+         email: user.email
       }
    }
 }
