@@ -2,8 +2,7 @@ import { IsEmail, IsString, MinLength } from 'class-validator'
 
 export class AuthLoginDto {
 
-   @MinLength(1)
-   @IsEmail()
+   @IsString()
    email: string
 
    @IsString()

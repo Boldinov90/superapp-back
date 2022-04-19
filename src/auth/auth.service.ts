@@ -16,11 +16,36 @@ export class AuthService {
    ) {}
 
    async login(dto: AuthLoginDto) {
-      const user = await this.validateUser(dto)
-      const tokens = await this.issueTokenPair(String(user._id))
-      return {
-         user,
-         ...tokens,
+      let errors = {
+         email: null,
+         password: null,
+      }
+      const user = await this.UserModel.findOne({
+         email: dto.email,
+      })
+      if (!user) {
+         errors.email = 'Пользователь не найден. Зарегистрируйтесь*'
+      }
+      if (dto.email.length === 0) {
+         errors.email = 'Поле не может быть пустым*'
+      }
+      if(user){
+         const isValidPassword = await compare(dto.password, user.password)
+         if (!isValidPassword) {
+            errors.password = 'Пароль неверный*'
+         }
+      }
+      if (dto.password.length === 0) {
+         errors.password = 'Поле не может быть пустым*'
+      }
+      if (errors.email || errors.password) {
+         return errors
+      } else {
+         const tokens = await this.issueTokenPair(String(user._id))
+         return {
+            user,
+            ...tokens,
+         }
       }
    }
 
@@ -30,6 +55,9 @@ export class AuthService {
          name: null,
          password: null,
          passwordConfirm: null,
+      }
+      if (dto.email.length === 0) {
+         errors.email = 'Поле не может быть пустым*'
       }
       const oldUser = await this.UserModel.findOne({
          email: dto.email,
@@ -41,13 +69,14 @@ export class AuthService {
          errors.name = 'Поле не может быть пустым*'
       }
       if (dto.password.length < 6) {
-         errors.password = 'Пароль должен состоять миним из 6 символов*'
+         errors.password = 'Пароль должен состоять минимум из 6 символов*'
       }
       if (dto.password.length === 0) {
          errors.password = 'Поле не может быть пустым*'
       }
       if (dto.passwordConfirm.length < 6) {
-         errors.passwordConfirm = 'Пароль должен состоять миним из 6 символов*'
+         errors.passwordConfirm =
+            'Пароль должен состоять минимум из 6 символов*'
       }
       if (dto.passwordConfirm.length === 0) {
          errors.passwordConfirm = 'Поле не может быть пустым*'
@@ -55,10 +84,14 @@ export class AuthService {
       if (dto.password !== dto.passwordConfirm) {
          errors.passwordConfirm = 'Пароли не совпадают*'
       }
-      
-      if(errors.email || errors.name || errors.password || errors.passwordConfirm){
+      if (
+         errors.email ||
+         errors.name ||
+         errors.password ||
+         errors.passwordConfirm
+      ) {
          return errors
-      }else{
+      } else {
          const salt = await genSalt(10)
          const newUser = new this.UserModel({
             name: dto.name,
@@ -73,31 +106,6 @@ export class AuthService {
             ...tokens,
          }
       }
-   }
-
-   async validateUser(dto: AuthLoginDto) {
-      let user: any
-      user = await this.UserModel.findOne({
-         email: dto.email,
-      })
-      if (!user) {
-         user = { error: 'Пользователь не найден. Зарегистрируйтесь*' }
-         return user
-      }
-      if (dto.password.length === 0) {
-         user = { error: 'Поле не может быть пустым*' }
-         return user
-      }
-      if (dto.password.length < 6) {
-         user = { error: 'Пароль должен состоять миним из 6 символов*' }
-         return user
-      }
-      const isValidPassword = await compare(dto.password, user.password)
-      if (!isValidPassword) {
-         user = { error: 'Пароль неверный*' }
-         return user
-      }
-      return user
    }
 
    async issueTokenPair(_id: string) {

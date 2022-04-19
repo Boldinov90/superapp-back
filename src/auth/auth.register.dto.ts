@@ -2,7 +2,7 @@ import { IsArray, IsEmail, IsString } from 'class-validator'
 
 export class AuthRegisterDto {
 
-   @IsEmail()
+   @IsString()
    email: string
 
    @IsString()
