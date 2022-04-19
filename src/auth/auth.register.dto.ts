@@ -1,6 +1,6 @@
 import { IsArray, IsEmail, IsString } from 'class-validator'
 
-export class AuthDto {
+export class AuthRegisterDto {
 
    @IsEmail()
    email: string
@@ -10,6 +10,9 @@ export class AuthDto {
 
    @IsString()
    password: string
+
+   @IsString()
+   passwordConfirm: string
 
    @IsArray()
    toDo: string[] = []

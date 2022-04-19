@@ -11,8 +11,11 @@ export class UserModel extends TimeStamps {
    password: string
 
    @prop()
+   passwordConfirm: string
+
+   @prop()
    name: string
 
    @prop()
-   toDo: string[]
+   toDo: string[] = []
 }
