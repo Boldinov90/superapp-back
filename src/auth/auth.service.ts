@@ -1,5 +1,7 @@
 import {
    BadRequestException,
+   HttpException,
+   HttpStatus,
    Injectable,
    UnauthorizedException,
 } from '@nestjs/common'
@@ -9,7 +11,6 @@ import { compare, genSalt, hash } from 'bcrypt'
 import { InjectModel } from 'nestjs-typegoose'
 import { UserModel } from 'src/user/user.model'
 import { AuthDto } from './auth.dto'
-// import { LoginAuthDto } from './login.auth.dto'
 
 @Injectable()
 export class AuthService {
@@ -23,38 +24,29 @@ export class AuthService {
       const user = await this.validateUser(dto)
       const tokens = await this.issueTokenPair(String(user._id))
       return {
-         user: this.returnUserFields(user),
+         user,
          ...tokens,
       }
-      // const user = {}
-      // const login = await this.UserModel.findOne({email: dto.email})
-      // if(!login) {
-      //    login.data.message = "sdfsdfsdfsdf"
-      //    return login
-      // }
-
-
-
-
-
-
-
-
    }
 
    async register(dto: AuthDto) {
       const oldUser = await this.UserModel.findOne({
-         email: dto.email
+         email: dto.email,
       })
-      if (oldUser) throw new BadRequestException('Пользователь с таким адресом уже существует')
+      if (oldUser)
+         throw new BadRequestException(
+            'Пользователь с таким адресом уже существует',
+         )
       const salt = await genSalt(10)
       const newUser = new this.UserModel({
          name: dto.name,
          email: dto.email,
-         password: await hash(dto.password, salt)
+         password: await hash(dto.password, salt),
+         toDo: dto.toDo,
       })
       const user = await newUser.save()
       const tokens = await this.issueTokenPair(String(user._id))
+
       return {
          user: this.returnUserFields(user),
          ...tokens,
@@ -62,12 +54,27 @@ export class AuthService {
    }
 
    async validateUser(dto: AuthDto) {
-      const user = await this.UserModel.findOne({
+      let user: any
+      user = await this.UserModel.findOne({
          email: dto.email,
       })
-      if (!user) throw new UnauthorizedException('Пользователь не найден. Зарегистрируйтесь*') 
+      if (!user) {
+         user = { error: 'Пользователь не найден. Зарегистрируйтесь*' }
+         return user
+      }
+      if (dto.password.length === 0) {
+         user = { error: 'Поле не может быть пустым*' }
+         return user
+      }
+      if (dto.password.length < 6) {
+         user = { error: 'Пароль должен состоять миним из 6 символов*' }
+         return user
+      }
       const isValidPassword = await compare(dto.password, user.password)
-      if (!isValidPassword) throw new UnauthorizedException('Пароль неверный')
+      if (!isValidPassword) {
+         user = { error: 'Пароль неверный*' }
+         return user
+      }
       return user
    }
 
@@ -83,7 +90,8 @@ export class AuthService {
       return {
          _id: user._id,
          name: user.name,
-         email: user.email
+         email: user.email,
+         toDo: user.toDo,
       }
    }
 }
