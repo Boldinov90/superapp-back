@@ -16,6 +16,6 @@ export class UserModel extends TimeStamps {
    @prop()
    name: string
 
-   @prop()
-   toDo: string[] = []
+   @prop({ type: () => String })
+   toDo: string[]
 }

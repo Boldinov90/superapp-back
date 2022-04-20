@@ -4,8 +4,8 @@ import { ModelType } from '@typegoose/typegoose/lib/types'
 import { compare, genSalt, hash } from 'bcrypt'
 import { InjectModel } from 'nestjs-typegoose'
 import { UserModel } from 'src/user/user.model'
-import { AuthLoginDto } from './auth.login.dto'
-import { AuthRegisterDto } from './auth.register.dto'
+import { AuthLoginDto } from './dto/auth.login.dto'
+import { AuthRegisterDto } from './dto/auth.register.dto'
 
 @Injectable()
 export class AuthService {
