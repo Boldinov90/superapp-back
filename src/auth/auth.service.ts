@@ -6,6 +6,7 @@ import { InjectModel } from 'nestjs-typegoose'
 import { UserModel } from 'src/user/user.model'
 import { AuthLoginDto } from './dto/auth.login.dto'
 import { AuthRegisterDto } from './dto/auth.register.dto'
+import { UpdateToDoUserDto } from './dto/auth.update-user-todo.dto'
 
 @Injectable()
 export class AuthService {
@@ -29,7 +30,7 @@ export class AuthService {
       if (dto.email.length === 0) {
          errors.email = 'Поле не может быть пустым*'
       }
-      if(user){
+      if (user) {
          const isValidPassword = await compare(dto.password, user.password)
          if (!isValidPassword) {
             errors.password = 'Пароль неверный*'
@@ -106,6 +107,17 @@ export class AuthService {
             ...tokens,
          }
       }
+   }
+
+   async getUserById(id: string): Promise<UserModel> {
+      return this.UserModel.findById(id)
+   }
+
+   async updateUserToDo(
+      id: string,
+      userDto: UpdateToDoUserDto,
+   ): Promise<UserModel> {
+      return this.UserModel.findByIdAndUpdate(id, userDto, { new: true })
    }
 
    async issueTokenPair(_id: string) {
