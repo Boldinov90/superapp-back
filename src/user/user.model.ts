@@ -8,14 +8,15 @@ export class UserModel extends TimeStamps {
    email: string
 
    @prop()
+   name: string
+
+   @prop()
    password: string
 
    @prop()
    passwordConfirm: string
 
-   @prop()
-   name: string
-
    @prop({ type: () => Array })
    toDo: string
+
 }

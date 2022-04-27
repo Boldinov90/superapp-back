@@ -12,7 +12,7 @@ import {
 import { AuthLoginDto } from './dto/auth.login.dto'
 import { AuthRegisterDto } from './dto/auth.register.dto'
 import { AuthService } from './auth.service'
-import { UserModel } from 'src/user/user.model'
+// import { UserModel } from 'src/user/user.model'
 import { UpdateToDoUserDto } from './dto/auth.update-user-todo.dto'
 
 @Controller('auth')
@@ -43,10 +43,7 @@ export class AuthController {
    @UsePipes(new ValidationPipe())
    @HttpCode(200)
    @Put(':id')
-   update(
-      @Body() updateUserDto: UpdateToDoUserDto,
-      @Param('id') id: string,
-   ) {
-      return this.AuthService.updateUserToDo(id, updateUserDto);
+   update(@Body() updateUserDto: UpdateToDoUserDto, @Param('id') id: string) {
+      return this.AuthService.updateUserToDo(id, updateUserDto)
    }
 }

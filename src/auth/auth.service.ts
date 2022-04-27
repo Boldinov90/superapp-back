@@ -95,8 +95,8 @@ export class AuthService {
       } else {
          const salt = await genSalt(10)
          const newUser = new this.UserModel({
-            name: dto.name,
             email: dto.email,
+            name: dto.name,
             password: await hash(dto.password, salt),
             toDo: dto.toDo,
          })
@@ -133,7 +133,7 @@ export class AuthService {
          _id: user._id,
          name: user.name,
          email: user.email,
-         toDo: user.toDo,
+         // toDo: user.toDo,
       }
    }
 }
