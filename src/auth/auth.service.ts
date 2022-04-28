@@ -127,13 +127,4 @@ export class AuthService {
       })
       return { accessToken }
    }
-
-   returnUserFields(user: UserModel) {
-      return {
-         _id: user._id,
-         name: user.name,
-         email: user.email,
-         // toDo: user.toDo,
-      }
-   }
 }

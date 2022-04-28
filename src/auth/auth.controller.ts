@@ -12,7 +12,6 @@ import {
 import { AuthLoginDto } from './dto/auth.login.dto'
 import { AuthRegisterDto } from './dto/auth.register.dto'
 import { AuthService } from './auth.service'
-// import { UserModel } from 'src/user/user.model'
 import { UpdateToDoUserDto } from './dto/auth.update-user-todo.dto'
 
 @Controller('auth')

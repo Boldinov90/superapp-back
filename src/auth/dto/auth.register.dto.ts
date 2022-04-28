@@ -1,4 +1,4 @@
-import { IsArray, IsEmail, IsString } from 'class-validator'
+import { IsArray, IsString } from 'class-validator'
 
 export class AuthRegisterDto {
    @IsString()
@@ -16,6 +16,4 @@ export class AuthRegisterDto {
    @IsArray()
    toDo: string[] = []
 
-   // @IsString()
-   // toDo: string[]
 }
