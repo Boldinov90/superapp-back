@@ -1,3 +1,4 @@
 export class UpdateToDoUserDto {
-    readonly toDo: Array<Object>
+   // eslint-disable-next-line @typescript-eslint/ban-types
+   readonly toDo: Array<Object>
 }

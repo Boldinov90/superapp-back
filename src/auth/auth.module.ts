@@ -13,16 +13,16 @@ import { getJwtConfig } from 'src/configs/jwt.config'
          {
             typegooseClass: UserModel,
             schemaOptions: {
-               collection: 'user'
-            }
+               collection: 'user',
+            },
          },
       ]),
       ConfigModule,
       JwtModule.registerAsync({
          imports: [ConfigModule],
          inject: [ConfigService],
-         useFactory:getJwtConfig
-      })
+         useFactory: getJwtConfig,
+      }),
    ],
    providers: [AuthService],
    controllers: [AuthController],

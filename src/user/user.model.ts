@@ -18,5 +18,4 @@ export class UserModel extends TimeStamps {
 
    @prop({ type: () => Array })
    toDo: string
-
 }

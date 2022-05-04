@@ -15,5 +15,4 @@ export class AuthRegisterDto {
 
    @IsArray()
    toDo: string[] = []
-
 }

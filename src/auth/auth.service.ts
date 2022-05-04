@@ -17,7 +17,7 @@ export class AuthService {
    ) {}
 
    async login(dto: AuthLoginDto) {
-      let errors = {
+      const errors = {
          email: null,
          password: null,
       }
@@ -51,7 +51,7 @@ export class AuthService {
    }
 
    async register(dto: AuthRegisterDto) {
-      let errors = {
+      const errors = {
          email: null,
          name: null,
          password: null,

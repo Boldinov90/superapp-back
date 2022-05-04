@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common'
 import { AuthLoginDto } from './dto/auth.login.dto'
 import { AuthRegisterDto } from './dto/auth.register.dto'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { AuthService } from './auth.service'
 import { UpdateToDoUserDto } from './dto/auth.update-user-todo.dto'
 
